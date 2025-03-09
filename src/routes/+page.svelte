@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PauseCircleIcon, PlayCircleIcon } from 'lucide-svelte';
 	import KepaLogo from './KepaLogo.svelte';
-	import { scale, fly } from 'svelte/transition';
+	import { scale, fly, fade } from 'svelte/transition';
 	import Background from './Background.svelte';
 	import MariachiGuitar from '$lib/MariachiGuitar.svelte';
 	import MariachiAlex from '$lib/MariachiAlex.svelte';
@@ -13,19 +13,21 @@
 
 	const startOffset = 6.6;
 	// const bpm = 132;
-	const bpm = 140;
+	const bpm = 135;
 	let beat = $derived(Math.max(Math.ceil(((time - startOffset) * bpm) / 60), 0));
 	// let beat = $state(0);
 
 	let isKepasaVisible = $derived(time > 1.8 && time < 6);
 	let isQuestionVisible = $derived(time > 1.8 && time < 3);
 
-	let showGuitarMariachis = $derived(beat > 32);
+	let showGuitarMariachis1 = $derived(beat > 32);
 	let guitarMariachisProgress1 = $derived(Math.min(Math.max((beat - 32) / 8, 0), 1));
+	let showGuitarMariachis2 = $derived(beat > 32 + 8);
 	let guitarMariachisProgress2 = $derived(Math.min(Math.max((beat - (32 + 8)) / 8, 0), 1));
 
-	let showAlexMariachis = $derived(beat > 32 + 16);
+	let showAlexMariachis1 = $derived(beat > 32 + 16);
 	let alexMariachisProgress1 = $derived(Math.min(Math.max((beat - (32 + 16)) / 8, 0), 1));
+	let showAlexMariachis2 = $derived(beat > 32 + 16 + 8);
 	let alexMariachisProgress2 = $derived(Math.min(Math.max((beat - (32 + 16 + 8)) / 8, 0), 1));
 </script>
 
@@ -80,37 +82,61 @@
 		{beat} -->
 		<div class="*:flex *:*:-mx-8 *:absolute *:bottom-0 w-screen overflow-hidden">
 			<!-- mariachis guitar -->
-			<div class="transition-[right]" style="right:{(1 - guitarMariachisProgress1) * 100 + 50}%">
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-			</div>
-			<div class="transition-[left]" style="left:{(1 - guitarMariachisProgress2) * 100 + 50}%">
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-				<MariachiGuitar {playing} {beat} />
-			</div>
+			{#if showGuitarMariachis1}
+				<div
+					class="transition-[right]"
+					style="right:{(1 - guitarMariachisProgress1) * 60 + 50}%"
+					out:fade
+				>
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+				</div>
+			{/if}
+			{#if showGuitarMariachis2}
+				<div
+					class="transition-[left]"
+					style="left:{(1 - guitarMariachisProgress2) * 60 + 50}%"
+					out:fade
+				>
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+					<MariachiGuitar {playing} {beat} />
+				</div>
+			{/if}
 		</div>
 		<div class="*:flex *:*:-mx-8 *:absolute *:top-0 w-screen overflow-hidden">
-			<!-- mariachis guitar -->
-			<div class="transition-[right]" style="right:{(1 - alexMariachisProgress1) * 100 + 50}%">
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-			</div>
-			<div class="transition-[left]" style="left:{(1 - alexMariachisProgress2) * 100 + 50}%">
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-				<MariachiAlex {playing} {beat} />
-			</div>
+			{#if showAlexMariachis1}
+				<!-- mariachis guitar -->
+				<div
+					class="transition-[right]"
+					style="right:{(1 - alexMariachisProgress1) * 60 + 50}%"
+					out:fade
+				>
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+				</div>
+			{/if}
+			{#if showAlexMariachis2}
+				<div
+					class="transition-[left]"
+					style="left:{(1 - alexMariachisProgress2) * 60 + 50}%"
+					out:fade
+				>
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+					<MariachiAlex {playing} {beat} />
+				</div>
+			{/if}
 		</div>
 	</div>
 </main>

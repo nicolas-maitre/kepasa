@@ -6,12 +6,20 @@
 		beat,
 		playing
 	}: { class?: string; beat: number; playing: boolean } = $props();
+	let jsp = $derived(beat - 1);
+	let spinStep: 'fw' | 'bw' | 'nm' = $derived(
+		playing && beat > 0 ? (+(jsp % 2 === Math.floor(jsp / 16) % 2) ? 'fw' : 'bw') : 'nm'
+	);
 </script>
 
 <div
 	class={cn(
-		'relative size-52 *:absolute *:size-[inherit]',
-		!playing && '*:![animation-play-state:paused]'
+		'relative size-75 *:absolute *:size-[inherit]',
+		!playing && '*:![animation-play-state:paused]',
+		'transition-transform duration-200',
+		spinStep === 'fw' && '-rotate-6',
+		spinStep === 'bw' && 'rotate-6',
+		spinStep === 'nm' && 'rotate-0'
 	)}
 >
 	<img src="/mariachi-alex/body.png" alt=":)" />

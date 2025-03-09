@@ -16,39 +16,6 @@
 	}: { class?: string; beat: number; playing: boolean } = $props();
 
 	let heightPercentLol = $derived(Math.min(Math.max((beat - 16) / 16, 0), 1));
-
-	// Define the Bubble type
-	interface Bubble {
-		id: string;
-		size: string;
-		left: string;
-		animationDuration: string;
-	}
-
-	// Initialize the bubbles array
-	let bubbles: Bubble[] = [];
-
-	// Function to create a new bubble
-	function createBubble(): void {
-		const bubble: Bubble = {
-			id: Math.random().toString(36).substr(2, 9),
-			size: Math.random() * 20 + 10 + 'px',
-			left: Math.random() * 100 + 'vw',
-			animationDuration: Math.random() * 5 + 3 + 's'
-		};
-		bubbles = [...bubbles, bubble];
-
-		// Remove the bubble after the animation ends
-		setTimeout(
-			() => {
-				bubbles = bubbles.filter((b) => b.id !== bubble.id);
-			},
-			parseFloat(bubble.animationDuration) * 1000
-		);
-	}
-
-	// Create bubbles at intervals
-	setInterval(createBubble, 500);
 </script>
 
 <svelte:window bind:innerWidth={screenWidth} bind:innerHeight={screenHeight} />
@@ -57,7 +24,7 @@
 	class={cn('w-screen h-screen overflow-hidden relative transition-transform', _class)}
 	style="transform:translateY({(1 - heightPercentLol) * 100}%)"
 >
-	<div class="bg-gradient-to-t from-orange-900 to-yellow-500 w-screen h-screen"></div>
+	<div class="bg-gradient-to-t from-orange-500 to-yellow-500 w-screen h-screen"></div>
 	<div
 		class="absolute overflow-hidden -top-80 -left-100 h-screen -rotate-25"
 		style="width:{width}px; height:{height}px"
@@ -77,10 +44,9 @@
 <style>
 	.bubble-container {
 		position: relative;
-		width: 100vw;
-		height: 100vh;
+		width: 100%;
+		height: 100%;
 		overflow: hidden;
-		background-color: #007bff;
 	}
 
 	.bubble {
@@ -108,41 +74,6 @@
 
 	.anim-inverted {
 		animation: translateAnimation var(--animation-duration) infinite alternate-reverse;
-	}
-
-	.wave {
-		display: block;
-		position: absolute;
-		top: 0;
-		height: 40px;
-		width: 100%;
-		background: rgb(57, 27, 112);
-		transform: scale(1, 1);
-	}
-
-	.wave:before {
-		content: '';
-		display: block;
-		position: absolute;
-		border-radius: 100%;
-		width: 100%;
-		height: 300px;
-		background-color: white;
-		right: -25%;
-		top: 20px;
-	}
-
-	.wave:after {
-		content: '';
-		display: block;
-		position: absolute;
-		border-radius: 100%;
-		width: 100%;
-		height: 300px;
-		background-color: white;
-		left: -25%;
-		top: -240px;
-		clip-path: ellipse(100% 15% at -15% 100%);
 	}
 
 	@keyframes translateAnimation {
